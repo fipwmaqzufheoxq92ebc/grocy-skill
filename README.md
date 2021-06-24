@@ -8,9 +8,20 @@ It requires a running self-hosted instance of [grocy](https://grocy.info)
 
 ## Examples
 * "Put milk on the shopping list"
-* "Add one cucumber to stock"
-* "How many bread do we have at home"
+* "How much bread do we have at home"
+* "Remind me what I want to buy"
 
+For "mass" insertion of bought products:
+- "I was shopping"  (Mycroft: "What did you buy?")
+- "1 Cucumber"
+- "1 Milk"
+- ...
+- "That was all"
+- Note: this uses always the default purchase quantity unit
+
+## Languages
+* English
+* German
 
 ## Credits
 fipwmaqzufheoxq92ebc
