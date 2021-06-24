@@ -1,0 +1,1 @@
+(?P<amount>\d+) (?P<product>.+)
