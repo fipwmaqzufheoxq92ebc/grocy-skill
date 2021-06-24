@@ -1,0 +1,3 @@
+dependencies:
+  python:
+    - git+https://github.com/fipwmaqzufheoxq92ebc/grocy-python-openapi#egg=grocy

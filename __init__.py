@@ -6,8 +6,8 @@ from mycroft import MycroftSkill, intent_handler
 from mycroft.skills.context import removes_context
 from mycroft.util.parse import extract_number
 
-from .openapi_client import ApiClient, ApiException, Configuration
-from .openapi_client.api import stock_api, generic_entity_interactions_api
+from grocy import ApiClient, ApiException, Configuration
+from grocy.api import stock_api, generic_entity_interactions_api
 
 
 class GrocySkill(MycroftSkill):
