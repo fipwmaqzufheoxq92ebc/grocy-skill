@@ -1,0 +1,31 @@
+
+skillMetadata:
+  sections:
+    - name: Grocy-Connection
+      fields:
+        - name: api_key
+          type: password
+          label: API-Key for Grocy
+          value: ""
+          placeholder: e.g. your-secret-grocy-api-key
+        - type: label
+          label: URL
+        - name: protocol
+          type: select
+          label: "http or https?"
+          value: http
+          options: http|http;https|https
+        - name: host
+          type: text
+          label: Hostname for your local Grocy-Instance
+          value: ""
+          placeholder: e.g. "demo.grocy.info"
+        - name: port
+          type: number
+          label: Port-Number for grocy
+          value: "80"
+          placeholder: e.g. 80
+        - name: base_path
+          type: text
+          label: Subpath of your grocy instance
+          value: "/"
