@@ -2,33 +2,44 @@ import logging
 from typing import Optional
 
 from adapt.intent import IntentBuilder
+from grocy import ApiClient, ApiException, Configuration
+from grocy.api import stock_api, generic_entity_interactions_api
 from mycroft import MycroftSkill, intent_handler
 from mycroft.skills.context import removes_context
 from mycroft.util.parse import extract_number
 
-from grocy import ApiClient, ApiException, Configuration
-from grocy.api import stock_api, generic_entity_interactions_api
-
 
 class GrocySkill(MycroftSkill):
-    # noinspection PyAttributeOutsideInit
-    def initialize(self):
-        protocol = self.settings.get('protocol') or 'http'
-        host = self.settings.get('host')
-        port = self.settings.get('port') or 80
-        path = self.settings.get('base_path') or "/"
-        if host is None:
-            raise Exception('Invalid settings')
-        url = f"{protocol}://{host}:{port}{path}api"
-        self.log.info('Connecting to grocy at "%s"' % url)
-        self._api = ApiClient(
-            Configuration(
-                host=
-                url,
-                api_key=self.settings.get('api_key'))
-        )
-        self._generic = generic_entity_interactions_api.GenericEntityInteractionsApi(self._api)
-        self._stock = stock_api.StockApi(self._api)
+    def __init__(self):
+        super().__init__()
+        self._api_client = None
+
+    @property
+    def _api(self):
+        if self._api_client is None:
+            protocol = self.settings.get('protocol') or 'http'
+            host = self.settings.get('host')
+            port = self.settings.get('port') or 80
+            path = self.settings.get('base_path') or "/"
+            if host is None:
+                raise Exception('Invalid settings')
+            url = f"{protocol}://{host}:{port}{path}api"
+            self.log.info('Connecting to grocy at "%s"' % url)
+            self._api_client = ApiClient(
+                Configuration(
+                    host=
+                    url,
+                    api_key=self.settings.get('api_key'))
+            )
+        return self._api_client
+
+    @property
+    def _stock(self):
+        return stock_api.StockApi(self._api)
+
+    @property
+    def _generic(self):
+        return generic_entity_interactions_api.GenericEntityInteractionsApi(self._api)
 
     def get_product_by_name(self, product_name) -> Optional[dict]:
         """
