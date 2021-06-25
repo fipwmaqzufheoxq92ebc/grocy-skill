@@ -22,6 +22,7 @@ class GrocySkill(MycroftSkill):
             port = self.settings.get('port') or 80
             path = self.settings.get('base_path') or "/"
             if host is None:
+                self.speak_dialog('not-configured', wait=True)
                 raise Exception('Invalid settings')
             url = f"{protocol}://{host}:{port}{path}api"
             self.log.info('Connecting to grocy at "%s"' % url)
@@ -174,6 +175,31 @@ class GrocySkill(MycroftSkill):
         self.speak_dialog('shopping-list.list', data={
             'items': self.list_to_text((self._get_text_for_shopping_list_item(item) for item in shopping_list))
         })
+
+    @intent_handler('configure.intent')
+    def configure(self, message):
+        self.speak_dialog('start-config')
+        protocol = self.ask_selection(['http', 'https'])
+        if protocol not in ['http', 'https']:
+            return
+
+        host = self.get_response('grocy-url')
+        port = self.get_response(
+            'grocy-port', validator=lambda x: x.isdecimal() and 0 < int(x) < 65536, num_retries=3,
+            on_fail='not-a-port-number'
+        )
+
+        resp = self.ask_yesno('confirm-settings', data={
+            'protocol': protocol,
+            'host': host,
+            'port': port,
+
+        })
+        if resp == 'yes':
+            self.settings['host'] = host
+            self.settings['protocol'] = protocol
+            self.settings['port'] = protocol
+            self.speak_dialog('settings-saved')
 
 
 def create_skill():
